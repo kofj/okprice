@@ -6,7 +6,7 @@ import "fmt"
 import "strings"
 
 const marketV2API = `https://www.okcoin.cn/v2/markets/market-tickers`
-const okurl = "|href=https://www.okcoin.cn/"
+const okurl = "https://www.okcoin.cn/"
 const btc = `1AVqs4ZhfgKrspkQ3RTwnB5EM8ujaiiuhS`
 const ltc = `LZ2vipxxiEHvPsf5xCuTp72M5j7zMJrnoP`
 
@@ -45,23 +45,37 @@ func main() {
 	var v = &PriceItems{}
 	err = decoder.Decode(v)
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	resp.Body.Close()
 
 	var head, all string
+
 	for _, v := range v.Data {
+		var color string
 		name := string(v.Symbol[:3])
+		switch v.Change[:1] {
+		case "+":
+			color = "green"
+
+		case "-":
+			color = "red"
+
+		default:
+			color = "gray"
+		}
+
 		if in(name, []string{"btc", "ltc", "eth"}) {
 			head += fmt.Sprintf("%s%s ", name2symbol(name), v.Last)
 		}
 
-		all += fmt.Sprintf("%s ￥%s %s (%s) Vol. %s %s\n", strings.ToUpper(name), v.Last, v.Change, v.ChangePercentage, v.Volume, okurl)
+		all += fmt.Sprintf("%s ￥%s %s (%s) Vol. %s |href=%s size=9 color=%s\n", strings.ToUpper(name), v.Last, v.Change, v.ChangePercentage, v.Volume, okurl, color)
+
 	}
 
-	fmt.Println(head, "\n---\n", "OKCoinCN Price\n", all)
-	fmt.Printf("---\nDonate BTC|href=bitcoin:%s\nDonate LTC|href=litecoin:%s", btc, ltc)
-
+	fmt.Println(head, " | size=12", "\n---\n", "OKCoinCN Price\n", all)
+	fmt.Printf("---\n ☕️ Donate\n--BTC|href=bitcoin:%s\n--LTC|href=litecoin:%s", btc, ltc)
 }
 
 func in(s string, arr []string) bool {
