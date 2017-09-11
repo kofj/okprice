@@ -88,7 +88,7 @@ func main() {
 
 	}
 
-	fmt.Println(head, " | size=12", "\n---\n", "OKCoinCN Price\n", all)
+	fmt.Println(head, " | size=12", "\n---\n", "OKCoinCN Price|href=", okurl, "\n", all)
 	fmt.Printf("---\n ☕️ Donate\n--BTC|href=bitcoin:%s\n--LTC|href=litecoin:%s", btc, ltc)
 }
 
