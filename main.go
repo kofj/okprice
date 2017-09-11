@@ -50,7 +50,7 @@ func main() {
 	}
 	resp.Body.Close()
 
-	var head, all string
+	var head, all, link string
 
 	for _, v := range v.Data {
 		var color string
@@ -70,7 +70,21 @@ func main() {
 			head += fmt.Sprintf("%s%s ", name2symbol(name), v.Last)
 		}
 
-		all += fmt.Sprintf("%s ￥%s %s (%s) Vol. %s |href=%s size=9 color=%s\n", strings.ToUpper(name), v.Last, v.Change, v.ChangePercentage, v.Volume, okurl, color)
+		switch name {
+		case "btc":
+			link = okurl + "/trade/btc.do"
+		case "ltc":
+			link = okurl + "/trade/ltc.do"
+		case "eth":
+			link = okurl + "/trade/eth.do"
+		case "etc":
+			link = okurl + "/spot/trade.do#etc"
+		case "bcc":
+			link = okurl + "/spot/trade.do#bcc"
+		default:
+			link = okurl
+		}
+		all += fmt.Sprintf("%s ￥%s %s (%s) Vol. %s |href=%s size=9 color=%s\n", strings.ToUpper(name), v.Last, v.Change, v.ChangePercentage, v.Volume, link, color)
 
 	}
 
